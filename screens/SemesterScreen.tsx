@@ -1,12 +1,16 @@
-import React, { useLayoutEffect, useState } from 'react';
-import { View, StyleSheet, Modal, Text, Button, TextInput } from 'react-native';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import { Ionicons } from '@expo/vector-icons';
-import SemesterItem from '../components/SemesterItem';
+import React, { useLayoutEffect, useState } from "react";
+import { View, StyleSheet, Modal, Text, Button, TextInput } from "react-native";
+import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
+import SemesterItem from "../components/SemesterItem";
 
 const SemesterScreen = ({ navigation, route }: any) => {
+	const semesterPlaceholderText = "Semester Name";
+	const gpaScalePlaceholderText = "GPA Scale ex. 4.0";
+
 	const [modalVisible, setModalVisible] = useState(false);
-	const [value, onChangeText] = useState('Semester Name');
+	const [semesterValue, onChangeSemesterText] = useState("");
+	const [gpaValue, onGpaChangeText] = useState("");
 
 	const { data } = route.params;
 
@@ -17,8 +21,7 @@ const SemesterScreen = ({ navigation, route }: any) => {
 					style={{ marginRight: 40 }}
 					onPress={() => {
 						setModalVisible(true);
-					}}
-				>
+					}}>
 					<Ionicons name='md-add-outline' size={32} color='black' />
 				</TouchableOpacity>
 			),
@@ -37,58 +40,68 @@ const SemesterScreen = ({ navigation, route }: any) => {
 				transparent={true}
 				visible={modalVisible}
 				onRequestClose={() => {
-					alert('Modal has been closed.');
-				}}
-			>
+					alert("Modal has been closed.");
+				}}>
 				<View style={styles.centeredView}>
 					<View style={styles.modalView}>
 						<View
 							style={{
-								alignSelf: 'flex-start',
-								width: '100%',
-							}}
-						>
+								alignSelf: "flex-start",
+								width: "100%",
+							}}>
 							<Text
 								style={{
-									alignSelf: 'flex-start',
-									fontSize: 22,
-									fontWeight: '700',
-								}}
-							>
-								Name
+									alignSelf: "center",
+									fontSize: 20,
+									paddingTop: 10,
+									fontWeight: "700",
+								}}>
+								Add New Semester
 							</Text>
 							<TextInput
 								style={{
 									height: 30,
 									borderBottomWidth: 1,
 								}}
-								onChangeText={(text) => onChangeText(text)}
-								value={value}
+								onChangeText={(text) =>
+									onChangeSemesterText(text)
+								}
+								placeholder={semesterPlaceholderText}
+								placeholderTextColor={"rgba(0,0,0,0.5)"}
+								value={semesterValue}
+							/>
+							<TextInput
+								style={{
+									height: 30,
+									borderBottomWidth: 1,
+								}}
+								keyboardType='decimal-pad'
+								onChangeText={(text) => onGpaChangeText(text)}
+								placeholder={gpaScalePlaceholderText}
+								placeholderTextColor={"rgba(0,0,0,0.5)"}
+								value={gpaValue}
 							/>
 
 							<View
 								style={{
-									flexDirection: 'row',
-									justifyContent: 'space-between',
-									alignItems: 'center',
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
 									height: 50,
 									paddingTop: 10,
-								}}
-							>
+								}}>
 								<Button
 									title='Close'
 									onPress={() => {
 										setModalVisible(false);
-									}}
-								>
+									}}>
 									<Text>Close</Text>
 								</Button>
 								<Button
 									title='Done'
 									onPress={() => {
 										setModalVisible(false);
-									}}
-								>
+									}}>
 									<View>
 										<Text>Done</Text>
 									</View>
@@ -107,24 +120,24 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	list: {
-		width: '100%',
-		height: '100%',
+		width: "100%",
+		height: "100%",
 		paddingVertical: 1,
 	},
 	centeredView: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		justifyContent: "center",
+		alignItems: "center",
 		marginTop: 22,
 	},
 	modalView: {
 		margin: 20,
-		width: '80%',
-		backgroundColor: 'white',
+		width: "80%",
+		backgroundColor: "white",
 		borderRadius: 10,
 		padding: 35,
-		alignItems: 'center',
-		shadowColor: '#000',
+		alignItems: "center",
+		shadowColor: "#000",
 		shadowOffset: {
 			width: 0,
 			height: 2,
