@@ -1,0 +1,10 @@
+{
+  "auth": {
+    "gradeapp486c2c0c": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  }
+}
