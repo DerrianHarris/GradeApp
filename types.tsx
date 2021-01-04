@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component } from "react";
 
 export type RootStackParamList = {
 	Home: undefined;
@@ -8,19 +8,37 @@ export type RootStackParamList = {
 	NotFound: undefined;
 };
 
+export type User = {
+	id: string;
+	name: string;
+};
+
 export type Semester = {
-	Year: number;
+	id: string;
 	Name: string;
+	GpaScale: number;
 	Classes: [Class];
 };
 
 export type Class = {
+	id: string;
 	Name: string;
+	GradingScale: [number];
+	Catogory: [Catogory];
+};
+
+export type Catogory = {
+	id: string;
+	Name: string;
+	Scale: number;
 	Assignments: [Assignment];
 };
 
 export type Assignment = {
+	id: string;
 	Name: string;
-	grade: number;
+	GainedPoints: number;
+	PossiblePoints: number;
+	Completed: boolean;
 	dueDate: number;
 };

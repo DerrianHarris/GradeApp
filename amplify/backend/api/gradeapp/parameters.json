@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "gradeapp",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authgradeapp486c2c0c",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

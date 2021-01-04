@@ -6,7 +6,7 @@ import SemesterItem from "../components/SemesterItem";
 
 const SemesterScreen = ({ navigation, route }: any) => {
 	const semesterPlaceholderText = "Semester Name";
-	const gpaScalePlaceholderText = "GPA Scale ex. 4.0";
+	const gpaScalePlaceholderText = "ex. 4.0";
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [semesterValue, onChangeSemesterText] = useState("");
@@ -70,17 +70,36 @@ const SemesterScreen = ({ navigation, route }: any) => {
 								placeholderTextColor={"rgba(0,0,0,0.5)"}
 								value={semesterValue}
 							/>
-							<TextInput
+							<View
 								style={{
-									height: 30,
-									borderBottomWidth: 1,
-								}}
-								keyboardType='decimal-pad'
-								onChangeText={(text) => onGpaChangeText(text)}
-								placeholder={gpaScalePlaceholderText}
-								placeholderTextColor={"rgba(0,0,0,0.5)"}
-								value={gpaValue}
-							/>
+									justifyContent: "center",
+									alignItems: "center",
+								}}>
+								<Text
+									style={{
+										fontSize: 17,
+										paddingTop: 10,
+										fontWeight: "700",
+									}}>
+									GPA Scale
+								</Text>
+								<TextInput
+									style={{
+										height: 30,
+										borderWidth: 1,
+										justifyContent: "center",
+										width: 60,
+										textAlign: "center",
+									}}
+									keyboardType='decimal-pad'
+									onChangeText={(text) =>
+										onGpaChangeText(text)
+									}
+									placeholder={gpaScalePlaceholderText}
+									placeholderTextColor={"rgba(0,0,0,0.5)"}
+									value={gpaValue}
+								/>
+							</View>
 
 							<View
 								style={{
