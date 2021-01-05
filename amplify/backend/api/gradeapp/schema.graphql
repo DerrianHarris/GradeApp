@@ -1,4 +1,13 @@
 type User @model {
 	id: ID!
+	email: String!
+	semesters: [Semester] @connection(keyName: "byUser", fields: ["id"])
+}
+
+type Semester @model @key(name: "byUser", fields: ["userId", "createdAt"]) {
+	id: ID!
+	userId: ID!
 	name: String!
+	createdAt: String!
+	gpaScale: Float!
 }

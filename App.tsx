@@ -7,13 +7,22 @@ import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import { withAuthenticator } from "aws-amplify-react-native";
 
+import Amplify from "@aws-amplify/core";
+
+import { DataStore } from "@aws-amplify/datastore";
+import { User } from "./models";
+
+import awsconfig from "./aws-exports";
+import { API, Auth, graphqlOperation } from "aws-amplify";
 import { getUser } from "./graphql/queries";
 import { createUser } from "./graphql/mutations";
 
-import Amplify, { Auth, API, graphqlOperation } from "aws-amplify";
-import awsconfig from "./aws-exports";
-
-Amplify.configure(awsconfig);
+Amplify.configure({
+	...awsconfig,
+	Analytics: {
+		disabled: true,
+	},
+});
 
 function App() {
 	const isLoadingComplete = useCachedResources();
@@ -34,12 +43,16 @@ function App() {
 				}
 				const newUser = {
 					id: userInfo.attributes.sub,
-					name: userInfo.attributes.email,
+					email: userInfo.attributes.email,
 				};
-
-				await API.graphql(
-					graphqlOperation(createUser, { input: newUser })
-				);
+				try {
+					await API.graphql(
+						graphqlOperation(createUser, { input: newUser })
+					);
+					console.log(userData);
+				} catch (e) {
+					console.log(e);
+				}
 			}
 		};
 		fetchUser();

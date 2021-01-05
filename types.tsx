@@ -15,9 +15,9 @@ export type User = {
 
 export type Semester = {
 	id: string;
-	Name: string;
-	GpaScale: number;
-	Classes: [Class];
+	name: string;
+	gpaScale: number;
+	classes: [Class];
 };
 
 export type Class = {

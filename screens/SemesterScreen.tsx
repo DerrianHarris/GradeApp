@@ -1,18 +1,49 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { View, StyleSheet, Modal, Text, Button, TextInput } from "react-native";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import SemesterItem from "../components/SemesterItem";
+import { API, Auth, graphqlOperation } from "aws-amplify";
+import { getSemester, getUser, listUsers } from "../graphql/queries";
+import {
+	createSemester,
+	createUser,
+	deleteSemester,
+} from "../graphql/mutations";
+import { onCreateSemester } from "../graphql/subscriptions";
 
-const SemesterScreen = ({ navigation, route }: any) => {
+const SemesterScreen = ({ navigation }: any) => {
 	const semesterPlaceholderText = "Semester Name";
 	const gpaScalePlaceholderText = "ex. 4.0";
 
 	const [modalVisible, setModalVisible] = useState(false);
-	const [semesterValue, onChangeSemesterText] = useState("");
+	const [semesterNameValue, onChangeSemesterNameValueText] = useState("");
 	const [gpaValue, onGpaChangeText] = useState("");
 
-	const { data } = route.params;
+	const [semestersValue, setSemesters] = useState([]);
+
+	const [dataUpdated, onDataUpdated] = useState({});
+
+	const subscription = API.graphql(
+		graphqlOperation(onCreateSemester)
+	).subscribe({(data) => {}});
+
+	useEffect(() => {
+		const fetchSemesters = async () => {
+			try {
+				const userInfo = await Auth.currentAuthenticatedUser();
+				const userData = await API.graphql(
+					graphqlOperation(getUser, { id: userInfo.attributes.sub })
+				);
+				console.log(userData);
+				setSemesters(userData.data.getUser.semesters.items);
+				console.log(semestersValue);
+			} catch (e) {
+				console.warn(e);
+			}
+		};
+		fetchSemesters();
+	}, []);
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -30,8 +61,23 @@ const SemesterScreen = ({ navigation, route }: any) => {
 	return (
 		<View style={styles.container}>
 			<FlatList
-				data={data}
-				renderItem={({ item, index }) => <SemesterItem data={item} />}
+				data={semestersValue}
+				renderItem={({ item, index }) => (
+					<SemesterItem
+						data={item}
+						onDelete={async () => {
+							console.log(item);
+							await API.graphql(
+								graphqlOperation(deleteSemester, {
+									input: {
+										id: item.id,
+									},
+								})
+							);
+							setRefresh("");
+						}}
+					/>
+				)}
 				keyExtractor={(item, index) => index.toString()}
 				style={styles.list}
 			/>
@@ -64,11 +110,11 @@ const SemesterScreen = ({ navigation, route }: any) => {
 									borderBottomWidth: 1,
 								}}
 								onChangeText={(text) =>
-									onChangeSemesterText(text)
+									onChangeSemesterNameValueText(text)
 								}
 								placeholder={semesterPlaceholderText}
 								placeholderTextColor={"rgba(0,0,0,0.5)"}
-								value={semesterValue}
+								value={semesterNameValue}
 							/>
 							<View
 								style={{
@@ -112,14 +158,31 @@ const SemesterScreen = ({ navigation, route }: any) => {
 								<Button
 									title='Close'
 									onPress={() => {
+										onChangeSemesterNameValueText("");
+										onGpaChangeText("");
 										setModalVisible(false);
+										setRefresh(refresh + " ");
 									}}>
 									<Text>Close</Text>
 								</Button>
 								<Button
 									title='Done'
-									onPress={() => {
+									onPress={async () => {
+										const userInfo = await Auth.currentAuthenticatedUser();
+										await API.graphql(
+											graphqlOperation(createSemester, {
+												input: {
+													userId:
+														userInfo.attributes.sub,
+													name: semesterNameValue,
+													gpaScale: gpaValue,
+												},
+											})
+										);
+										onChangeSemesterNameValueText("");
+										onGpaChangeText("");
 										setModalVisible(false);
+										setRefresh(refresh + " ");
 									}}>
 									<View>
 										<Text>Done</Text>

@@ -9,7 +9,18 @@ export const createUser = /* GraphQL */ `
   ) {
     createUser(input: $input, condition: $condition) {
       id
-      name
+      email
+      semesters {
+        items {
+          id
+          userId
+          name
+          createdAt
+          gpaScale
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -22,7 +33,18 @@ export const updateUser = /* GraphQL */ `
   ) {
     updateUser(input: $input, condition: $condition) {
       id
-      name
+      email
+      semesters {
+        items {
+          id
+          userId
+          name
+          createdAt
+          gpaScale
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -35,8 +57,64 @@ export const deleteUser = /* GraphQL */ `
   ) {
     deleteUser(input: $input, condition: $condition) {
       id
+      email
+      semesters {
+        items {
+          id
+          userId
+          name
+          createdAt
+          gpaScale
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createSemester = /* GraphQL */ `
+  mutation CreateSemester(
+    $input: CreateSemesterInput!
+    $condition: ModelSemesterConditionInput
+  ) {
+    createSemester(input: $input, condition: $condition) {
+      id
+      userId
       name
       createdAt
+      gpaScale
+      updatedAt
+    }
+  }
+`;
+export const updateSemester = /* GraphQL */ `
+  mutation UpdateSemester(
+    $input: UpdateSemesterInput!
+    $condition: ModelSemesterConditionInput
+  ) {
+    updateSemester(input: $input, condition: $condition) {
+      id
+      userId
+      name
+      createdAt
+      gpaScale
+      updatedAt
+    }
+  }
+`;
+export const deleteSemester = /* GraphQL */ `
+  mutation DeleteSemester(
+    $input: DeleteSemesterInput!
+    $condition: ModelSemesterConditionInput
+  ) {
+    deleteSemester(input: $input, condition: $condition) {
+      id
+      userId
+      name
+      createdAt
+      gpaScale
       updatedAt
     }
   }
