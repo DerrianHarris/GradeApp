@@ -51,6 +51,18 @@ export const getSemester = /* GraphQL */ `
       name
       createdAt
       gpaScale
+      classes {
+        items {
+          id
+          userId
+          semesterId
+          name
+          createdAt
+          gradingScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -68,6 +80,42 @@ export const listSemesters = /* GraphQL */ `
         name
         createdAt
         gpaScale
+        classes {
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getClass = /* GraphQL */ `
+  query GetClass($id: ID!) {
+    getClass(id: $id) {
+      id
+      userId
+      semesterId
+      name
+      createdAt
+      gradingScale
+      updatedAt
+    }
+  }
+`;
+export const listClasss = /* GraphQL */ `
+  query ListClasss(
+    $filter: ModelClassFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        semesterId
+        name
+        createdAt
+        gradingScale
         updatedAt
       }
       nextToken

@@ -73,6 +73,18 @@ export const onCreateSemester = /* GraphQL */ `
       name
       createdAt
       gpaScale
+      classes {
+        items {
+          id
+          userId
+          semesterId
+          name
+          createdAt
+          gradingScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -85,6 +97,18 @@ export const onUpdateSemester = /* GraphQL */ `
       name
       createdAt
       gpaScale
+      classes {
+        items {
+          id
+          userId
+          semesterId
+          name
+          createdAt
+          gradingScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -97,6 +121,57 @@ export const onDeleteSemester = /* GraphQL */ `
       name
       createdAt
       gpaScale
+      classes {
+        items {
+          id
+          userId
+          semesterId
+          name
+          createdAt
+          gradingScale
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const onCreateClass = /* GraphQL */ `
+  subscription OnCreateClass {
+    onCreateClass {
+      id
+      userId
+      semesterId
+      name
+      createdAt
+      gradingScale
+      updatedAt
+    }
+  }
+`;
+export const onUpdateClass = /* GraphQL */ `
+  subscription OnUpdateClass {
+    onUpdateClass {
+      id
+      userId
+      semesterId
+      name
+      createdAt
+      gradingScale
+      updatedAt
+    }
+  }
+`;
+export const onDeleteClass = /* GraphQL */ `
+  subscription OnDeleteClass {
+    onDeleteClass {
+      id
+      userId
+      semesterId
+      name
+      createdAt
+      gradingScale
       updatedAt
     }
   }

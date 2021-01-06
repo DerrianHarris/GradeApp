@@ -18,6 +18,8 @@ import LinkingConfiguration from "./LinkingConfiguration";
 import DummyData from "../Data/DummyData";
 import ClassScreen from "../screens/ClassScreen";
 import AssignmentScreen from "../screens/AssignmentScreen";
+import { useEffect, useState } from "react";
+import { Auth } from "aws-amplify";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -26,9 +28,17 @@ export default function Navigation({
 }: {
 	colorScheme: ColorSchemeName;
 }) {
+	const [userId, setuserId] = useState();
+	useEffect(() => {
+		const getUser = async () => {
+			const userInfo = await Auth.currentAuthenticatedUser();
+			setuserId(userInfo.attributes.sub);
+		};
+		getUser();
+	}, []);
 	return (
 		<NavigationContainer linking={LinkingConfiguration}>
-			<RootNavigator />
+			<RootNavigator userId={userId} />
 		</NavigationContainer>
 	);
 }
@@ -37,7 +47,7 @@ export default function Navigation({
 // Read more here: https://reactnavigation.org/docs/modal
 const Stack = createStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
+function RootNavigator(props) {
 	return (
 		<View style={{ flex: 1, flexDirection: "row" }}>
 			<Stack.Navigator
@@ -66,7 +76,11 @@ function RootNavigator() {
 									</TouchableOpacity>
 							  ),
 				})}>
-				<Stack.Screen name='Semesters' component={SemesterScreen} />
+				<Stack.Screen
+					name='Semesters'
+					component={SemesterScreen}
+					initialParams={{ userId: props.userId }}
+				/>
 				<Stack.Screen name='Class' component={ClassScreen} />
 				<Stack.Screen name='Assignments' component={AssignmentScreen} />
 				<Stack.Screen

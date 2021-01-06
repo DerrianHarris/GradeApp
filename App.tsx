@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import useCachedResources from "./hooks/useCachedResources";
@@ -27,22 +27,23 @@ Amplify.configure({
 function App() {
 	const isLoadingComplete = useCachedResources();
 	const colorScheme = useColorScheme();
-
 	useEffect(() => {
 		const fetchUser = async () => {
 			const userInfo = await Auth.currentAuthenticatedUser({
 				bypassCache: true,
 			});
+			userId = userInfo.attributes.sub;
+			console.log("UserId: " + userId);
 			if (userInfo) {
 				const userData = await API.graphql(
-					graphqlOperation(getUser, { id: userInfo.attributes.sub })
+					graphqlOperation(getUser, { id: userId })
 				);
 				if (userData.data.getUser) {
 					console.log("User has already registered in database");
 					return;
 				}
 				const newUser = {
-					id: userInfo.attributes.sub,
+					id: userId,
 					email: userInfo.attributes.email,
 				};
 				try {

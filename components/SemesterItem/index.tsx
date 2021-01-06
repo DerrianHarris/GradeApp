@@ -11,6 +11,7 @@ import TouchableButtonComponent from "../TouchableButtonComponent";
 export type ScreenItemProps = {
 	data: Semester;
 	onDelete: any;
+	onSwipe: any;
 };
 
 const SemesterItem = (props: ScreenItemProps) => {
@@ -20,9 +21,10 @@ const SemesterItem = (props: ScreenItemProps) => {
 	return (
 		<TouchableButtonComponent
 			onPress={() => {
-				navigation.navigate("Class");
+				navigation.navigate("Class", { data });
 			}}
 			onDelete={props.onDelete}
+			onSwipe={props.onSwipe}
 			Component={
 				<View style={styles.container}>
 					<Text
@@ -34,11 +36,16 @@ const SemesterItem = (props: ScreenItemProps) => {
 						{data.name}
 					</Text>
 					<View style={styles.gpa}>
-						<Text style={{ fontSize: 20, color: "black" }}>
+						<Text
+							style={{
+								fontSize: 20,
+								color: "black",
+								fontWeight: "600",
+							}}>
 							GPA
 						</Text>
 						<Text style={{ fontSize: 20, color: "black" }}>
-							4.0
+							{data.gpaScale.toFixed(1)}
 						</Text>
 					</View>
 				</View>

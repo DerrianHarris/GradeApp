@@ -1,5 +1,12 @@
-import React, { useLayoutEffect, useState } from "react";
-import { View, StyleSheet, Modal, Text, Button } from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import {
+	View,
+	StyleSheet,
+	Modal,
+	Text,
+	Button,
+	KeyboardAvoidingView,
+} from "react-native";
 import {
 	FlatList,
 	TouchableOpacity,
@@ -7,15 +14,27 @@ import {
 } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import ClassItem from "../components/ClassItem";
+import { API, graphqlOperation } from "aws-amplify";
+import { getClass, getSemester } from "../graphql/queries";
+import { createClass } from "../graphql/mutations";
 
 const ClassScreen = ({ navigation, route }: any) => {
 	const classNamePlaceholderText = "Class Name";
-	const refreshArr = ["", "", "", "", "", "", "", "", "", "", "", "", ""];
-
-	const [modalVisible, setModalVisible] = useState(false);
-	const [classNameValue, onChangeClassNameText] = useState("");
-	const [gradeScale, onChangeGradeScale] = useState({ ...refreshArr });
-
+	const refreshArr = [
+		"97",
+		"93",
+		"90",
+		"87",
+		"83",
+		"80",
+		"77",
+		"73",
+		"70",
+		"67",
+		"63",
+		"60",
+		"0",
+	];
 	const gradeScaleName = [
 		"A+",
 		"A",
@@ -32,7 +51,17 @@ const ClassScreen = ({ navigation, route }: any) => {
 		"F",
 	];
 
-	const { data } = route.params;
+	const [modalVisible, setModalVisible] = useState(false);
+
+	const [classNameValue, onChangeClassNameText] = useState("");
+
+	const [gradeScale, onChangeGradeScale] = useState({ ...refreshArr });
+
+	const [classes, setclasses] = useState([]);
+
+	const semesterData = route.params.data;
+
+	const { userId, id } = semesterData;
 
 	useLayoutEffect(() => {
 		navigation.setOptions({
@@ -48,51 +77,50 @@ const ClassScreen = ({ navigation, route }: any) => {
 		});
 	}, [navigation]);
 
+	const fetchClasses = async () => {
+		try {
+			if (userId) {
+				const classesData = await API.graphql(
+					graphqlOperation(getSemester, { id: id })
+				);
+				if (classesData.data.getSemester) {
+					setclasses(classesData.data.getSemester.classes.items);
+				}
+			}
+		} catch (e) {
+			console.log(e);
+		}
+		return;
+	};
+	useEffect(() => {
+		fetchClasses();
+	}, []);
+
 	return (
 		<View style={styles.container}>
 			<FlatList
-				data={data}
-				renderItem={({ item, index }) => <ClassItem data={item} />}
+				data={classes}
+				renderItem={({ item, index }) => (
+					<ClassItem data={item} onSwipe={() => {}} />
+				)}
 				keyExtractor={(item, index) => index.toString()}
 				style={styles.list}
 			/>
-			<Modal
-				animationType='fade'
-				transparent={true}
-				visible={modalVisible}
-				onRequestClose={() => {
-					alert("Modal has been closed.");
-				}}>
-				<View style={styles.centeredView}>
-					<View style={styles.modalView}>
-						<View
-							style={{
-								alignSelf: "flex-start",
-								width: "100%",
-							}}>
-							<Text
+			<KeyboardAvoidingView behavior='padding'>
+				<Modal
+					animationType='fade'
+					transparent={true}
+					visible={modalVisible}
+					onRequestClose={() => {
+						alert("Modal has been closed.");
+					}}>
+					<View style={styles.centeredView}>
+						<View style={styles.modalView}>
+							<View
 								style={{
-									alignSelf: "center",
-									fontSize: 20,
-									paddingTop: 10,
-									fontWeight: "700",
+									alignSelf: "flex-start",
+									width: "100%",
 								}}>
-								Add New Class
-							</Text>
-							<TextInput
-								style={{
-									height: 30,
-									borderBottomWidth: 1,
-								}}
-								onChangeText={(text) =>
-									onChangeClassNameText(text)
-								}
-								placeholder={classNamePlaceholderText}
-								placeholderTextColor={"rgba(0,0,0,0.5)"}
-								value={classNameValue}
-							/>
-
-							<View>
 								<Text
 									style={{
 										alignSelf: "center",
@@ -100,96 +128,148 @@ const ClassScreen = ({ navigation, route }: any) => {
 										paddingTop: 10,
 										fontWeight: "700",
 									}}>
-									Grading Scale
+									Add New Class
 								</Text>
-								<FlatList
-									data={gradeScaleName}
-									scrollEnabled={false}
-									renderItem={({ item, index }) => (
-										<View
-											style={{
-												justifyContent: "flex-start",
-												flexDirection: "row",
-												paddingLeft: "30%",
-											}}>
-											<Text
-												style={{
-													fontSize: 30,
-													alignSelf: "flex-start",
-												}}>
-												{item}
-											</Text>
-											<TextInput
-												style={{
-													height: 30,
-													width: 60,
-													borderWidth: 1,
-													marginLeft: 30,
-													position: "absolute",
-													left: "60%",
-												}}
-												keyboardType='number-pad'
-												onChangeText={(text) => {
-													onChangeGradeScale({
-														...gradeScale,
-														[index]: text,
-													});
-												}}
-												textAlign='center'
-												placeholder={""}
-												placeholderTextColor={
-													"rgba(0,0,0,0.8)"
-												}
-												value={gradeScale[index]}
-											/>
-										</View>
-									)}
-									keyExtractor={(item, index) =>
-										index.toString()
+								<TextInput
+									style={{
+										height: 30,
+										borderBottomWidth: 1,
+									}}
+									onChangeText={(text) =>
+										onChangeClassNameText(text)
 									}
-									style={{}}
+									placeholder={classNamePlaceholderText}
+									placeholderTextColor={"rgba(0,0,0,0.5)"}
+									value={classNameValue}
 								/>
-							</View>
-							<Text
-								style={{
-									justifyContent: "center",
-									alignSelf: "center",
-								}}>
-								Blank Values Will Be Ignored
-							</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "space-between",
-									alignItems: "center",
-									height: 50,
-									paddingTop: 10,
-								}}>
-								<Button
-									title='Close'
-									onPress={() => {
-										setModalVisible(false);
-										onChangeGradeScale(refreshArr);
-										onChangeClassNameText("");
+
+								<View>
+									<Text
+										style={{
+											alignSelf: "center",
+											fontSize: 20,
+											paddingTop: 10,
+											fontWeight: "700",
+										}}>
+										Grading Scale
+									</Text>
+									<FlatList
+										data={gradeScaleName}
+										scrollEnabled={false}
+										renderItem={({ item, index }) => (
+											<View
+												style={{
+													justifyContent:
+														"flex-start",
+													flexDirection: "row",
+													paddingLeft: "30%",
+												}}>
+												<Text
+													style={{
+														fontSize: 30,
+														alignSelf: "flex-start",
+													}}>
+													{item}
+												</Text>
+												<TextInput
+													style={{
+														height: 30,
+														width: 60,
+														borderWidth: 1,
+														marginLeft: 30,
+														position: "absolute",
+														left: "60%",
+													}}
+													keyboardType='number-pad'
+													onChangeText={(text) => {
+														onChangeGradeScale({
+															...gradeScale,
+															[index]: text,
+														});
+													}}
+													textAlign='center'
+													placeholder={
+														gradeScale[index]
+													}
+													placeholderTextColor={
+														"rgba(0,0,0,0.5)"
+													}
+												/>
+											</View>
+										)}
+										keyExtractor={(item, index) =>
+											index.toString()
+										}
+										style={{}}
+									/>
+								</View>
+								<Text
+									style={{
+										justifyContent: "center",
+										alignSelf: "center",
 									}}>
-									<Text>Close</Text>
-								</Button>
-								<Button
-									title='Done'
-									onPress={() => {
-										setModalVisible(false);
-										onChangeGradeScale(refreshArr);
-										onChangeClassNameText("");
+									Blank Values Will Be Ignored
+								</Text>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
+										height: 50,
+										paddingTop: 10,
 									}}>
-									<View>
-										<Text>Done</Text>
-									</View>
-								</Button>
+									<Button
+										title='Close'
+										onPress={() => {
+											console.log("hello 1");
+
+											console.log(gradeScale);
+											setModalVisible(false);
+											onChangeGradeScale({
+												...refreshArr,
+											});
+											onChangeClassNameText("");
+										}}>
+										<Text>Close</Text>
+									</Button>
+									<Button
+										title='Done'
+										onPress={async () => {
+											console.log("hello 2");
+
+											console.log(gradeScale);
+											await API.graphql(
+												graphqlOperation(createClass, {
+													input: {
+														userId: userId,
+														semesterId: id,
+														name:
+															classNameValue ===
+															""
+																? classNameValue
+																: "Class",
+														gradingScale: gradeScale.map(
+															Number
+														),
+													},
+												})
+											);
+											setModalVisible(false);
+											onChangeGradeScale({
+												...refreshArr,
+											});
+											onChangeClassNameText("");
+										}}>
+										<View>
+											<Text>Done</Text>
+										</View>
+									</Button>
+								</View>
 							</View>
 						</View>
 					</View>
-				</View>
-			</Modal>
+				</Modal>
+			</KeyboardAvoidingView>
 		</View>
 	);
 };
@@ -209,6 +289,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		marginTop: 22,
+		paddingBottom: 100,
 	},
 	modalView: {
 		margin: 20,

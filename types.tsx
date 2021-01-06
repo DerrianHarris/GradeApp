@@ -22,9 +22,9 @@ export type Semester = {
 
 export type Class = {
 	id: string;
-	Name: string;
-	GradingScale: [number];
-	Catogory: [Catogory];
+	name: string;
+	gradingScale: [number];
+	catogory: [Catogory];
 };
 
 export type Catogory = {

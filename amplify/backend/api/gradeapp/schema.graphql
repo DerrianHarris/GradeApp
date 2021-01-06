@@ -10,4 +10,16 @@ type Semester @model @key(name: "byUser", fields: ["userId", "createdAt"]) {
 	name: String!
 	createdAt: String!
 	gpaScale: Float!
+	classes: [Class] @connection(keyName: "bySemester", fields: ["id"])
+}
+
+type Class
+	@model
+	@key(name: "bySemester", fields: ["semesterId", "createdAt"]) {
+	id: ID!
+	userId: ID!
+	semesterId: ID!
+	name: String!
+	createdAt: String!
+	gradingScale: [Float]!
 }

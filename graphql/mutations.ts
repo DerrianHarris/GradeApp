@@ -85,6 +85,18 @@ export const createSemester = /* GraphQL */ `
       name
       createdAt
       gpaScale
+      classes {
+        items {
+          id
+          userId
+          semesterId
+          name
+          createdAt
+          gradingScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -100,6 +112,18 @@ export const updateSemester = /* GraphQL */ `
       name
       createdAt
       gpaScale
+      classes {
+        items {
+          id
+          userId
+          semesterId
+          name
+          createdAt
+          gradingScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -115,6 +139,66 @@ export const deleteSemester = /* GraphQL */ `
       name
       createdAt
       gpaScale
+      classes {
+        items {
+          id
+          userId
+          semesterId
+          name
+          createdAt
+          gradingScale
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const createClass = /* GraphQL */ `
+  mutation CreateClass(
+    $input: CreateClassInput!
+    $condition: ModelClassConditionInput
+  ) {
+    createClass(input: $input, condition: $condition) {
+      id
+      userId
+      semesterId
+      name
+      createdAt
+      gradingScale
+      updatedAt
+    }
+  }
+`;
+export const updateClass = /* GraphQL */ `
+  mutation UpdateClass(
+    $input: UpdateClassInput!
+    $condition: ModelClassConditionInput
+  ) {
+    updateClass(input: $input, condition: $condition) {
+      id
+      userId
+      semesterId
+      name
+      createdAt
+      gradingScale
+      updatedAt
+    }
+  }
+`;
+export const deleteClass = /* GraphQL */ `
+  mutation DeleteClass(
+    $input: DeleteClassInput!
+    $condition: ModelClassConditionInput
+  ) {
+    deleteClass(input: $input, condition: $condition) {
+      id
+      userId
+      semesterId
+      name
+      createdAt
+      gradingScale
       updatedAt
     }
   }
