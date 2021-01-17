@@ -1,6 +1,7 @@
 type User @model {
 	id: ID!
 	email: String!
+	createdAt: AWSDateTime!
 	semesters: [Semester] @connection(keyName: "byUser", fields: ["id"])
 }
 
@@ -8,7 +9,7 @@ type Semester @model @key(name: "byUser", fields: ["userId", "createdAt"]) {
 	id: ID!
 	userId: ID!
 	name: String!
-	createdAt: String!
+	createdAt: AWSDateTime!
 	gpaScale: Float!
 	classes: [Class] @connection(keyName: "bySemester", fields: ["id"])
 }
@@ -20,6 +21,31 @@ type Class
 	userId: ID!
 	semesterId: ID!
 	name: String!
-	createdAt: String!
+	createdAt: AWSDateTime!
 	gradingScale: [Float]!
+	sections: [Section] @connection(keyName: "byClass", fields: ["id"])
+}
+
+type Section @model @key(name: "byClass", fields: ["classId", "createdAt"]) {
+	id: ID!
+	userId: ID!
+	classId: ID!
+	name: String!
+	createdAt: AWSDateTime!
+	gradeScale: Float!
+	assignments: [Assignment] @connection(keyName: "bySection", fields: ["id"])
+}
+
+type Assignment
+	@model
+	@key(name: "bySection", fields: ["sectionId", "createdAt"]) {
+	id: ID!
+	userId: ID!
+	sectionId: ID!
+	name: String!
+	createdAt: AWSDateTime!
+	gainedPoints: Float!
+	possiblePoints: Float!
+	completed: Boolean!
+	dueDate: AWSDateTime
 }

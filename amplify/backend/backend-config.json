@@ -1,6 +1,6 @@
 {
   "auth": {
-    "gradeapp78260a96": {
+    "gradeapp7580ae50": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -16,7 +16,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authgradeapp78260a96"
+              "userPoolId": "authgradeapp7580ae50"
             }
           },
           "additionalAuthenticationProviders": []

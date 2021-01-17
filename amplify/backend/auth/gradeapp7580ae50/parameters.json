@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "gradeapp78260a96_identitypool_78260a96",
+    "identityPoolName": "gradeapp7580ae50_identitypool_7580ae50",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "gradea78260a96",
-    "userPoolName": "gradeapp78260a96_userpool_78260a96",
+    "resourceNameTruncated": "gradea7580ae50",
+    "userPoolName": "gradeapp7580ae50_userpool_7580ae50",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "gradea78260a96_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "gradea7580ae50_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "78260a96",
-    "resourceName": "gradeapp78260a96",
+    "sharedId": "7580ae50",
+    "resourceName": "gradeapp7580ae50",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [

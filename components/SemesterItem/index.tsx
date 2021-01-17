@@ -1,10 +1,6 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { Props } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import {
-	TouchableHighlight,
-	TouchableOpacity,
-} from "react-native-gesture-handler";
 import { Semester } from "../../types";
 import TouchableButtonComponent from "../TouchableButtonComponent";
 
@@ -12,20 +8,25 @@ export type ScreenItemProps = {
 	data: Semester;
 	onDelete: any;
 	onSwipe: any;
+	onEdit: any;
 };
 
 const SemesterItem = (props: ScreenItemProps) => {
 	const navigation = useNavigation();
-	const { data } = props;
-
+	const { data, onDelete, onSwipe, onEdit } = props;
 	return (
 		<TouchableButtonComponent
 			onPress={() => {
-				navigation.navigate("Class", { data });
+				navigation.navigate("Classes", {
+					userId: data.userId,
+					semesterId: data.id,
+				});
 			}}
-			onDelete={props.onDelete}
-			onSwipe={props.onSwipe}
-			Component={
+			onDelete={onDelete}
+			onSwipe={onSwipe}
+			onEdit={onEdit}
+			data={data}
+			component={
 				<View style={styles.container}>
 					<Text
 						style={{
@@ -62,7 +63,6 @@ const styles = StyleSheet.create({
 	},
 	gpa: {
 		alignItems: "center",
-		borderRadius: 10,
 		paddingVertical: 6,
 		marginRight: 20,
 		marginBottom: 1,

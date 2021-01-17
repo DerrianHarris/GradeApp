@@ -4,6 +4,7 @@ export type RootStackParamList = {
 	Home: undefined;
 	Semesters: any;
 	Class: undefined;
+	Section: undefined;
 	Assignments: undefined;
 	NotFound: undefined;
 };
@@ -15,6 +16,7 @@ export type User = {
 
 export type Semester = {
 	id: string;
+	userId: string;
 	name: string;
 	gpaScale: number;
 	classes: [Class];
@@ -22,23 +24,26 @@ export type Semester = {
 
 export type Class = {
 	id: string;
+	semesterId: string;
 	name: string;
 	gradingScale: [number];
-	catogory: [Catogory];
+	section: [Section];
 };
 
-export type Catogory = {
+export type Section = {
 	id: string;
-	Name: string;
-	Scale: number;
-	Assignments: [Assignment];
+	classId: string;
+	name: string;
+	gradeScale: number;
+	assignments: [Assignment];
 };
 
 export type Assignment = {
 	id: string;
-	Name: string;
-	GainedPoints: number;
-	PossiblePoints: number;
-	Completed: boolean;
+	sectionId: string;
+	name: string;
+	gainedPoints: number;
+	possiblePoints: number;
+	completed: boolean;
 	dueDate: number;
 };

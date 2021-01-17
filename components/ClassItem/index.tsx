@@ -1,38 +1,58 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { Props } from "react";
+import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import {
-	TouchableHighlight,
-	TouchableOpacity,
-} from "react-native-gesture-handler";
 import { Class } from "../../types";
 import TouchableButtonComponent from "../TouchableButtonComponent";
 
 export type ClassItemProps = {
 	data: Class;
+	onDelete: any;
 	onSwipe: any;
+	onEdit: any;
 };
 
 const ClassItem = (props: ClassItemProps) => {
 	const navigation = useNavigation();
-	const { data } = props;
+	const { data, onDelete, onSwipe, onEdit } = props;
 	return (
 		<TouchableButtonComponent
 			onPress={() => {
-				//navigation.navigate("Assignments", { data: data.Assignments });
+				navigation.navigate("Sections", {
+					classId: data.id,
+					userId: data.userId,
+				});
 			}}
-			onSwipe={props.onSwipe}
-			Component={
-				<View style={{ flexDirection: "row" }}>
+			onDelete={onDelete}
+			onSwipe={onSwipe}
+			onEdit={onEdit}
+			data={data}
+			component={
+				<View
+					style={{
+						flex: 1,
+						flexDirection: "row",
+						alignItems: "flex-end",
+						justifyContent: "space-between",
+					}}>
 					<Text style={{ fontSize: 32, fontWeight: "700" }}>
 						{data.name}
 					</Text>
 					<View>
-						<Text style={{ fontSize: 32, fontWeight: "700" }}>
+						<Text
+							style={{
+								textAlign: "center",
+								fontSize: 20,
+								fontWeight: "700",
+							}}>
 							Grade
 						</Text>
-						<Text style={{ fontSize: 32, fontWeight: "700" }}>
-							{calcGrade().toString()}
+						<Text
+							style={{
+								textAlign: "center",
+								fontSize: 32,
+								fontWeight: "500",
+							}}>
+							{calcGrade().toString() + "%"}
 						</Text>
 					</View>
 				</View>
@@ -41,7 +61,7 @@ const ClassItem = (props: ClassItemProps) => {
 	);
 };
 
-const calcGrade = async () => {
+const calcGrade = () => {
 	return 100;
 };
 

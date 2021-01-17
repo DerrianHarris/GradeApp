@@ -7,6 +7,7 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser {
       id
       email
+      createdAt
       semesters {
         items {
           id
@@ -18,7 +19,6 @@ export const onCreateUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -28,6 +28,7 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser {
       id
       email
+      createdAt
       semesters {
         items {
           id
@@ -39,7 +40,6 @@ export const onUpdateUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -49,6 +49,7 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser {
       id
       email
+      createdAt
       semesters {
         items {
           id
@@ -60,7 +61,6 @@ export const onDeleteUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -146,6 +146,18 @@ export const onCreateClass = /* GraphQL */ `
       name
       createdAt
       gradingScale
+      sections {
+        items {
+          id
+          userId
+          classId
+          name
+          createdAt
+          gradeScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -159,6 +171,18 @@ export const onUpdateClass = /* GraphQL */ `
       name
       createdAt
       gradingScale
+      sections {
+        items {
+          id
+          userId
+          classId
+          name
+          createdAt
+          gradeScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -172,6 +196,150 @@ export const onDeleteClass = /* GraphQL */ `
       name
       createdAt
       gradingScale
+      sections {
+        items {
+          id
+          userId
+          classId
+          name
+          createdAt
+          gradeScale
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const onCreateSection = /* GraphQL */ `
+  subscription OnCreateSection {
+    onCreateSection {
+      id
+      userId
+      classId
+      name
+      createdAt
+      gradeScale
+      assignments {
+        items {
+          id
+          userId
+          sectionId
+          name
+          createdAt
+          gainedPoints
+          possiblePoints
+          completed
+          dueDate
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSection = /* GraphQL */ `
+  subscription OnUpdateSection {
+    onUpdateSection {
+      id
+      userId
+      classId
+      name
+      createdAt
+      gradeScale
+      assignments {
+        items {
+          id
+          userId
+          sectionId
+          name
+          createdAt
+          gainedPoints
+          possiblePoints
+          completed
+          dueDate
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSection = /* GraphQL */ `
+  subscription OnDeleteSection {
+    onDeleteSection {
+      id
+      userId
+      classId
+      name
+      createdAt
+      gradeScale
+      assignments {
+        items {
+          id
+          userId
+          sectionId
+          name
+          createdAt
+          gainedPoints
+          possiblePoints
+          completed
+          dueDate
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const onCreateAssignment = /* GraphQL */ `
+  subscription OnCreateAssignment {
+    onCreateAssignment {
+      id
+      userId
+      sectionId
+      name
+      createdAt
+      gainedPoints
+      possiblePoints
+      completed
+      dueDate
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAssignment = /* GraphQL */ `
+  subscription OnUpdateAssignment {
+    onUpdateAssignment {
+      id
+      userId
+      sectionId
+      name
+      createdAt
+      gainedPoints
+      possiblePoints
+      completed
+      dueDate
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAssignment = /* GraphQL */ `
+  subscription OnDeleteAssignment {
+    onDeleteAssignment {
+      id
+      userId
+      sectionId
+      name
+      createdAt
+      gainedPoints
+      possiblePoints
+      completed
+      dueDate
       updatedAt
     }
   }

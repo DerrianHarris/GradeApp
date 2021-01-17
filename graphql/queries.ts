@@ -7,6 +7,7 @@ export const getUser = /* GraphQL */ `
     getUser(id: $id) {
       id
       email
+      createdAt
       semesters {
         items {
           id
@@ -18,7 +19,6 @@ export const getUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -33,10 +33,10 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         email
+        createdAt
         semesters {
           nextToken
         }
-        createdAt
         updatedAt
       }
       nextToken
@@ -98,6 +98,18 @@ export const getClass = /* GraphQL */ `
       name
       createdAt
       gradingScale
+      sections {
+        items {
+          id
+          userId
+          classId
+          name
+          createdAt
+          gradeScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -116,6 +128,99 @@ export const listClasss = /* GraphQL */ `
         name
         createdAt
         gradingScale
+        sections {
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSection = /* GraphQL */ `
+  query GetSection($id: ID!) {
+    getSection(id: $id) {
+      id
+      userId
+      classId
+      name
+      createdAt
+      gradeScale
+      assignments {
+        items {
+          id
+          userId
+          sectionId
+          name
+          createdAt
+          gainedPoints
+          possiblePoints
+          completed
+          dueDate
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const listSections = /* GraphQL */ `
+  query ListSections(
+    $filter: ModelSectionFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSections(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        classId
+        name
+        createdAt
+        gradeScale
+        assignments {
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAssignment = /* GraphQL */ `
+  query GetAssignment($id: ID!) {
+    getAssignment(id: $id) {
+      id
+      userId
+      sectionId
+      name
+      createdAt
+      gainedPoints
+      possiblePoints
+      completed
+      dueDate
+      updatedAt
+    }
+  }
+`;
+export const listAssignments = /* GraphQL */ `
+  query ListAssignments(
+    $filter: ModelAssignmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAssignments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        sectionId
+        name
+        createdAt
+        gainedPoints
+        possiblePoints
+        completed
+        dueDate
         updatedAt
       }
       nextToken

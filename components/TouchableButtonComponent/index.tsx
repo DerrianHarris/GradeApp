@@ -1,80 +1,127 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Text, View, StyleSheet, Button, Animated } from "react-native";
 import { TouchableOpacity, RectButton } from "react-native-gesture-handler";
-import Swipeable from "react-native-swipeable-row";
+
+import Swipeable from "react-native-gesture-handler/Swipeable";
 
 const TouchableButtonComponent = (props: any) => {
-	const [swiping, setswiping] = useState(false);
+	const [swiping, setSwiping] = useState(false);
 
 	useEffect(() => {
 		props.onSwipe(swiping);
 	}, [swiping]);
 
-	const rightButtons = [
-		<TouchableOpacity
-			style={{
-				backgroundColor: "red",
-				justifyContent: "center",
-				height: "100%",
-			}}>
-			<Text style={{ fontSize: 25, fontWeight: "600" }}>Delete</Text>
-		</TouchableOpacity>,
-	];
+	const SwipeableBttn = useRef(null);
 
-	const leftButtons = [
-		<TouchableOpacity
-			style={{
-				backgroundColor: "green",
-				justifyContent: "center",
-				alignItems: "flex-end",
-				height: "100%",
-			}}>
-			<Text style={{ fontSize: 25, fontWeight: "600" }}>Edit</Text>
-		</TouchableOpacity>,
-	];
+	const { data, onDelete, onEdit, onPress, component } = props;
+
+	const rightButton = (progress, dragX) => {
+		return (
+			<View
+				style={{
+					justifyContent: "center",
+					width: "45%",
+				}}>
+				<TouchableOpacity
+					style={{
+						backgroundColor: "#BC412B",
+						height: "100%",
+						justifyContent: "center",
+					}}
+					onPress={() => {
+						SwipeableBttn.current.close();
+						console.log("data");
+						console.log(data);
+						console.log(data.id);
+						onDelete(data.id);
+					}}>
+					<Text
+						style={{
+							color: "white",
+							fontWeight: "600",
+							fontSize: 22,
+							padding: 20,
+						}}>
+						Tap To Delete
+					</Text>
+				</TouchableOpacity>
+			</View>
+		);
+	};
+
+	const Edit = () => {
+		SwipeableBttn.current.close();
+		onEdit(data.id);
+	};
+
+	const leftButton = (progress, dragX) => {
+		return (
+			<View
+				style={{
+					justifyContent: "center",
+					width: "100%",
+					flex: 1,
+				}}>
+				<TouchableOpacity
+					style={{
+						backgroundColor: "#0ead69",
+						height: "100%",
+						justifyContent: "center",
+					}}
+					onPress={() => {
+						Edit();
+					}}>
+					<Text
+						style={{
+							color: "white",
+							fontWeight: "600",
+							fontSize: 22,
+							padding: 20,
+						}}>
+						Edit
+					</Text>
+				</TouchableOpacity>
+			</View>
+		);
+	};
 
 	return (
-		<View style={{ borderBottomWidth: 1 }}>
-			<Swipeable
-				rightButtons={rightButtons}
-				rightButtonWidth={100}
-				onRightActionComplete={() => {
-					props.onDelete();
-				}}
-				rightActionActivationDistance={300}
-				leftButtons={leftButtons}
-				leftButtonWidth={75}
-				onLightActionRelease={() => {
-					console.log("Editing...");
-				}}
-				lightActionActivationDistance={50}
-				onSwipeStart={() => setswiping(true)}
-				onSwipeStop={() => setswiping(false)}>
+		<Swipeable
+			ref={SwipeableBttn}
+			renderRightActions={rightButton}
+			renderLeftActions={leftButton}
+			leftThreshold={150}
+			rightThreshold={100}
+			friction={1}
+			overshootRight={false}
+			onSwipeableLeftOpen={() => {
+				Edit();
+			}}>
+			<View
+				style={{
+					backgroundColor: "white",
+				}}>
 				<RectButton
 					style={props.style || styles.button}
 					onPress={() => {
 						if (!swiping) {
-							props.onPress();
+							onPress();
 						}
 					}}>
-					{props.Component}
+					{component}
 				</RectButton>
-			</Swipeable>
-		</View>
+			</View>
+		</Swipeable>
 	);
 };
 
 const styles = StyleSheet.create({
 	button: {
-		height: 75,
-		marginHorizontal: 5,
 		alignItems: "flex-end",
 		justifyContent: "space-between",
 		flexDirection: "row",
 		paddingLeft: 40,
 		paddingRight: 20,
-		borderColor: "black",
 	},
 	rightAction: {},
 	actionText: {},

@@ -20,6 +20,7 @@ import ClassScreen from "../screens/ClassScreen";
 import AssignmentScreen from "../screens/AssignmentScreen";
 import { useEffect, useState } from "react";
 import { Auth } from "aws-amplify";
+import SectionScreen from "../screens/SectionScreen";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -81,8 +82,10 @@ function RootNavigator(props) {
 					component={SemesterScreen}
 					initialParams={{ userId: props.userId }}
 				/>
-				<Stack.Screen name='Class' component={ClassScreen} />
+				<Stack.Screen name='Classes' component={ClassScreen} />
+				<Stack.Screen name='Sections' component={SectionScreen} />
 				<Stack.Screen name='Assignments' component={AssignmentScreen} />
+
 				<Stack.Screen
 					name='NotFound'
 					component={NotFoundScreen}

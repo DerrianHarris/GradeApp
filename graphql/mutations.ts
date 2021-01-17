@@ -10,6 +10,7 @@ export const createUser = /* GraphQL */ `
     createUser(input: $input, condition: $condition) {
       id
       email
+      createdAt
       semesters {
         items {
           id
@@ -21,7 +22,6 @@ export const createUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -34,6 +34,7 @@ export const updateUser = /* GraphQL */ `
     updateUser(input: $input, condition: $condition) {
       id
       email
+      createdAt
       semesters {
         items {
           id
@@ -45,7 +46,6 @@ export const updateUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -58,6 +58,7 @@ export const deleteUser = /* GraphQL */ `
     deleteUser(input: $input, condition: $condition) {
       id
       email
+      createdAt
       semesters {
         items {
           id
@@ -69,7 +70,6 @@ export const deleteUser = /* GraphQL */ `
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
@@ -167,6 +167,18 @@ export const createClass = /* GraphQL */ `
       name
       createdAt
       gradingScale
+      sections {
+        items {
+          id
+          userId
+          classId
+          name
+          createdAt
+          gradeScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -183,6 +195,18 @@ export const updateClass = /* GraphQL */ `
       name
       createdAt
       gradingScale
+      sections {
+        items {
+          id
+          userId
+          classId
+          name
+          createdAt
+          gradeScale
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -199,6 +223,168 @@ export const deleteClass = /* GraphQL */ `
       name
       createdAt
       gradingScale
+      sections {
+        items {
+          id
+          userId
+          classId
+          name
+          createdAt
+          gradeScale
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const createSection = /* GraphQL */ `
+  mutation CreateSection(
+    $input: CreateSectionInput!
+    $condition: ModelSectionConditionInput
+  ) {
+    createSection(input: $input, condition: $condition) {
+      id
+      userId
+      classId
+      name
+      createdAt
+      gradeScale
+      assignments {
+        items {
+          id
+          userId
+          sectionId
+          name
+          createdAt
+          gainedPoints
+          possiblePoints
+          completed
+          dueDate
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const updateSection = /* GraphQL */ `
+  mutation UpdateSection(
+    $input: UpdateSectionInput!
+    $condition: ModelSectionConditionInput
+  ) {
+    updateSection(input: $input, condition: $condition) {
+      id
+      userId
+      classId
+      name
+      createdAt
+      gradeScale
+      assignments {
+        items {
+          id
+          userId
+          sectionId
+          name
+          createdAt
+          gainedPoints
+          possiblePoints
+          completed
+          dueDate
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const deleteSection = /* GraphQL */ `
+  mutation DeleteSection(
+    $input: DeleteSectionInput!
+    $condition: ModelSectionConditionInput
+  ) {
+    deleteSection(input: $input, condition: $condition) {
+      id
+      userId
+      classId
+      name
+      createdAt
+      gradeScale
+      assignments {
+        items {
+          id
+          userId
+          sectionId
+          name
+          createdAt
+          gainedPoints
+          possiblePoints
+          completed
+          dueDate
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const createAssignment = /* GraphQL */ `
+  mutation CreateAssignment(
+    $input: CreateAssignmentInput!
+    $condition: ModelAssignmentConditionInput
+  ) {
+    createAssignment(input: $input, condition: $condition) {
+      id
+      userId
+      sectionId
+      name
+      createdAt
+      gainedPoints
+      possiblePoints
+      completed
+      dueDate
+      updatedAt
+    }
+  }
+`;
+export const updateAssignment = /* GraphQL */ `
+  mutation UpdateAssignment(
+    $input: UpdateAssignmentInput!
+    $condition: ModelAssignmentConditionInput
+  ) {
+    updateAssignment(input: $input, condition: $condition) {
+      id
+      userId
+      sectionId
+      name
+      createdAt
+      gainedPoints
+      possiblePoints
+      completed
+      dueDate
+      updatedAt
+    }
+  }
+`;
+export const deleteAssignment = /* GraphQL */ `
+  mutation DeleteAssignment(
+    $input: DeleteAssignmentInput!
+    $condition: ModelAssignmentConditionInput
+  ) {
+    deleteAssignment(input: $input, condition: $condition) {
+      id
+      userId
+      sectionId
+      name
+      createdAt
+      gainedPoints
+      possiblePoints
+      completed
+      dueDate
       updatedAt
     }
   }
