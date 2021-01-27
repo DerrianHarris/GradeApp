@@ -1,7 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { getSection } from "../../graphql/queries";
 import { Section } from "../../types";
+import { CalcSectionGrade, getData } from "../../Utils";
 import TouchableButtonComponent from "../TouchableButtonComponent";
 
 export type ScreenItemProps = {
@@ -14,14 +16,27 @@ export type ScreenItemProps = {
 const SectionItem = (props: ScreenItemProps) => {
 	const navigation = useNavigation();
 	const { data, onDelete, onSwipe, onEdit } = props;
-	console.log("Rendering Section Item");
-	console.log(data);
+	const userId = data.userId;
+	const sectionId = data.id;
+
+	const [assignmentCount, setAssignmentCount] = useState(0);
+	const [grade, setGrade] = useState(0);
+
+	useEffect(() => {
+		const getDataFunc = async () => {
+			const data = await getData(sectionId, getSection);
+			setAssignmentCount(data.data.getSection.assignments.items.length);
+			setGrade(await CalcSectionGrade(sectionId));
+		};
+		getDataFunc();
+	});
+
 	return (
 		<TouchableButtonComponent
 			onPress={() => {
 				navigation.navigate("Assignments", {
-					sectionId: data.id,
-					userId: data.userId,
+					sectionId,
+					userId,
 				});
 				//navigation.navigate("Class", { data });
 			}}
@@ -51,8 +66,10 @@ const SectionItem = (props: ScreenItemProps) => {
 								fontSize: 15,
 								fontWeight: "500",
 							}}>
-							{data?.assignments?.length
-								? data.assignments.length
+							{assignmentCount >= 0
+								? assignmentCount == 1
+									? assignmentCount + " assignment"
+									: assignmentCount + " assignment(s)"
 								: 0 + " assignment(s)"}
 						</Text>
 					</View>
@@ -66,17 +83,13 @@ const SectionItem = (props: ScreenItemProps) => {
 						</Text>
 
 						<Text style={{ fontSize: 32, fontWeight: "500" }}>
-							{calcGrade().toString() + "%"}
+							{grade.toPrecision(3) + "%"}
 						</Text>
 					</View>
 				</View>
 			}
 		/>
 	);
-};
-
-const calcGrade = () => {
-	return 100;
 };
 
 const styles = StyleSheet.create({

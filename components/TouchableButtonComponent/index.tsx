@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Text, View, StyleSheet, Button, Animated } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { TouchableOpacity, RectButton } from "react-native-gesture-handler";
 
 import Swipeable from "react-native-gesture-handler/Swipeable";

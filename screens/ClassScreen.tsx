@@ -16,79 +16,13 @@ import {
 	onUpdateClass,
 } from "../graphql/subscriptions";
 import ScreenList, { modalStyles } from "../components/ScreenList";
+import { gradeScaleName } from "../Utils";
 
 const ClassScreen = ({ navigation, route }: any) => {
 	const [classesValue, setclasses] = useState([]);
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const { userId, semesterId } = route.params;
-
-	useLayoutEffect(() => {
-		navigation.setOptions({
-			headerRight: () => (
-				<TouchableOpacity
-					style={{ marginRight: 40 }}
-					onPress={() => {
-						setModalVisible(true);
-					}}>
-					<Ionicons name='md-add-outline' size={32} color='black' />
-				</TouchableOpacity>
-			),
-		});
-	}, [navigation]);
-
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onCreateClass)
-		).subscribe({
-			next: (data) => {
-				const newClasses = data.value.data.onCreateClass;
-				if (newClasses.userId !== userId) {
-					console.log(" Created Semester is for another user!");
-					return;
-				}
-				fetchClasses();
-			},
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onDeleteClass)
-		).subscribe({
-			next: (data) => {
-				const deletedClass = data.value.data.onDeleteClass;
-				if (deletedClass.userId !== userId) {
-					console.log(" Deleted Semester is for another user!");
-					return;
-				}
-				fetchClasses();
-			},
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onUpdateClass)
-		).subscribe({
-			next: (data) => {
-				const updatedClass = data.value.data.onUpdateClass;
-				if (updatedClass.userId !== userId) {
-					console.log(" Deleted Semester is for another user!");
-					return;
-				}
-				fetchClasses();
-			},
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		fetchClasses();
-	}, []);
-
 	const fetchClasses = async () => {
 		try {
 			if (userId) {
@@ -117,6 +51,9 @@ const ClassScreen = ({ navigation, route }: any) => {
 			onDeleteOp={deleteClass}
 			fetchAllData={fetchClasses}
 			fetchSingleDataOp={getClass}
+			onDeleteSub={onDeleteClass}
+			onCreateSub={onCreateClass}
+			onUpdateSub={onUpdateClass}
 		/>
 	);
 };
@@ -154,21 +91,6 @@ const modal = (
 		"63",
 		"60",
 		"0",
-	];
-	const gradeScaleName = [
-		"A+",
-		"A",
-		"A-",
-		"B+",
-		"B",
-		"B-",
-		"C+",
-		"C",
-		"C-",
-		"D+",
-		"D",
-		"D-",
-		"F",
 	];
 
 	const [classNameValue, onChangeClassNameText] = useState("");

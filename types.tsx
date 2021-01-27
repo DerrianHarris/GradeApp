@@ -1,5 +1,3 @@
-import { Component } from "react";
-
 export type RootStackParamList = {
 	Home: undefined;
 	Semesters: any;
@@ -27,6 +25,7 @@ export type Class = {
 	semesterId: string;
 	name: string;
 	gradingScale: [number];
+	credit: number;
 	section: [Section];
 };
 
@@ -44,6 +43,7 @@ export type Assignment = {
 	name: string;
 	gainedPoints: number;
 	possiblePoints: number;
+	grade: number;
 	completed: boolean;
 	dueDate: number;
 };

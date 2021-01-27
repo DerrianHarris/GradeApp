@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Semester } from "../../types";
+import { CalcGpa } from "../../Utils";
 import TouchableButtonComponent from "../TouchableButtonComponent";
 
 export type ScreenItemProps = {
@@ -14,12 +15,24 @@ export type ScreenItemProps = {
 const SemesterItem = (props: ScreenItemProps) => {
 	const navigation = useNavigation();
 	const { data, onDelete, onSwipe, onEdit } = props;
+	const userId = data.userId;
+	const semesterId = data.id;
+
+	const [gpa, setGpa] = useState(0);
+
+	useEffect(() => {
+		const getDataFunc = async () => {
+			setGpa(await CalcGpa(semesterId));
+		};
+		getDataFunc();
+	}, [data]);
+
 	return (
 		<TouchableButtonComponent
 			onPress={() => {
 				navigation.navigate("Classes", {
-					userId: data.userId,
-					semesterId: data.id,
+					userId,
+					semesterId,
 				});
 			}}
 			onDelete={onDelete}
@@ -46,7 +59,7 @@ const SemesterItem = (props: ScreenItemProps) => {
 							GPA
 						</Text>
 						<Text style={{ fontSize: 20, color: "black" }}>
-							{data.gpaScale.toFixed(1)}
+							{gpa}
 						</Text>
 					</View>
 				</View>

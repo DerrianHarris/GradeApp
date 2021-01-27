@@ -23,6 +23,7 @@ type Class
 	name: String!
 	createdAt: AWSDateTime!
 	gradingScale: [Float]!
+	credit: Float!
 	sections: [Section] @connection(keyName: "byClass", fields: ["id"])
 }
 
@@ -46,6 +47,7 @@ type Assignment
 	createdAt: AWSDateTime!
 	gainedPoints: Float!
 	possiblePoints: Float!
+	grade: Float!
 	completed: Boolean!
 	dueDate: AWSDateTime
 }

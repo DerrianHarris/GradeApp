@@ -43,42 +43,6 @@ const SemesterScreen = ({ navigation, route }: any) => {
 		return () => subscription.unsubscribe();
 	}, []);
 
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onDeleteSemester)
-		).subscribe({
-			next: (data) => {
-				const deletedSemester = data.value.data.onDeleteSemester;
-				if (deletedSemester.userId !== userId) {
-					console.log(" Deleted Semester is for another user!");
-					return;
-				}
-				fetchSemesters();
-			},
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onUpdateSemester)
-		).subscribe({
-			next: (data) => {
-				const updatedSemester = data.value.data.onUpdateSemester;
-				if (updatedSemester.userId !== userId) {
-					console.log(" Deleted Semester is for another user!");
-					return;
-				}
-				fetchSemesters();
-			},
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		fetchSemesters();
-	}, []);
-
 	const fetchSemesters = async () => {
 		try {
 			if (userId) {
@@ -108,6 +72,9 @@ const SemesterScreen = ({ navigation, route }: any) => {
 			onEdit={(id) => {}}
 			fetchAllData={fetchSemesters}
 			fetchSingleDataOp={getSemester}
+			onDeleteSub={onDeleteSemester}
+			onCreateSub={onCreateSemester}
+			onUpdateSub={onUpdateSemester}
 		/>
 	);
 };

@@ -260,6 +260,7 @@ export const createSection = /* GraphQL */ `
           createdAt
           gainedPoints
           possiblePoints
+          grade
           completed
           dueDate
           updatedAt
@@ -291,6 +292,7 @@ export const updateSection = /* GraphQL */ `
           createdAt
           gainedPoints
           possiblePoints
+          grade
           completed
           dueDate
           updatedAt
@@ -322,6 +324,7 @@ export const deleteSection = /* GraphQL */ `
           createdAt
           gainedPoints
           possiblePoints
+          grade
           completed
           dueDate
           updatedAt
@@ -345,6 +348,7 @@ export const createAssignment = /* GraphQL */ `
       createdAt
       gainedPoints
       possiblePoints
+      grade
       completed
       dueDate
       updatedAt
@@ -364,6 +368,7 @@ export const updateAssignment = /* GraphQL */ `
       createdAt
       gainedPoints
       possiblePoints
+      grade
       completed
       dueDate
       updatedAt
@@ -383,6 +388,7 @@ export const deleteAssignment = /* GraphQL */ `
       createdAt
       gainedPoints
       possiblePoints
+      grade
       completed
       dueDate
       updatedAt

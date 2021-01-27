@@ -23,72 +23,6 @@ const SectionScreen = ({ navigation, route }: any) => {
 	const [sections, setSections] = useState([]);
 	const { userId, classId } = route.params;
 
-	useLayoutEffect(() => {
-		navigation.setOptions({
-			headerRight: () => (
-				<TouchableOpacity
-					style={{ marginRight: 40 }}
-					onPress={() => {
-						setModalVisible(true);
-					}}>
-					<Ionicons name='md-add-outline' size={32} color='black' />
-				</TouchableOpacity>
-			),
-		});
-	}, [navigation]);
-
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onCreateSection)
-		).subscribe({
-			next: (data) => {
-				const newSection = data.value.data.onCreateSection;
-				if (newSection.userId !== userId) {
-					console.log(" Created Section is for another user!");
-					return;
-				}
-				fetchSections();
-			},
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onDeleteSection)
-		).subscribe({
-			next: (data) => {
-				const deletedSection = data.value.data.onDeleteSection;
-				if (deletedSection.userId !== userId) {
-					console.log(" Deleted Section is for another user!");
-					return;
-				}
-				fetchSections();
-			},
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onUpdateSection)
-		).subscribe({
-			next: (data) => {
-				const updatedSection = data.value.data.onUpdateSection;
-				if (updatedSection.userId !== userId) {
-					console.log(" Deleted Section is for another user!");
-					return;
-				}
-				fetchSections();
-			},
-		});
-		return () => subscription.unsubscribe();
-	}, []);
-
-	useEffect(() => {
-		fetchSections();
-	}, []);
-
 	const fetchSections = async () => {
 		try {
 			if (userId) {
@@ -117,6 +51,9 @@ const SectionScreen = ({ navigation, route }: any) => {
 			onDeleteOp={deleteSection}
 			fetchAllData={fetchSections}
 			fetchSingleDataOp={getSection}
+			onDeleteSub={onDeleteSection}
+			onCreateSub={onCreateSection}
+			onUpdateSub={onUpdateSection}
 		/>
 	);
 };

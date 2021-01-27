@@ -3,6 +3,8 @@ import { View, StyleSheet, Modal, RefreshControl } from "react-native";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import { API, graphqlOperation } from "aws-amplify";
+import { getData } from "../../Utils";
+
 const Seperator = () => {
 	return (
 		<View
@@ -23,6 +25,10 @@ const ScreenList = ({
 	modalVisible,
 	modal,
 	onDeleteOp,
+	onDeleteSub,
+	onCreateSub,
+	onUpdateSub,
+	style,
 }: any) => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [editing, setEditing] = useState(false);
@@ -31,7 +37,7 @@ const ScreenList = ({
 	const { value, userId } = data;
 	const onSwipe = (isSwiping) => {};
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		navigation.setOptions({
 			headerRight: () => (
 				<TouchableOpacity
@@ -45,15 +51,72 @@ const ScreenList = ({
 		});
 	}, []);
 
-	const getData = async (id: string) => {
-		const data = await API.graphql(
-			graphqlOperation(fetchSingleDataOp, { id })
-		);
-		return data;
-	};
+	useEffect(() => {
+		const unsubscribe = navigation.addListener("focus", () => {
+			fetchAllData();
+		});
+
+		return unsubscribe;
+	}, [navigation]);
+
+	useEffect(() => {
+		const key = onCreateSub.split(" ")[3].replace("O", "o");
+		const subscription = API.graphql(
+			graphqlOperation(onCreateSub)
+		).subscribe({
+			next: (data) => {
+				const createdData = data.value.data[key];
+				if (createdData.userId !== userId) {
+					console.log(" Created Data is for another user!");
+					return;
+				}
+				fetchAllData();
+			},
+		});
+		return () => subscription.unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		const key = onDeleteSub.split(" ")[3].replace("O", "o");
+		const subscription = API.graphql(
+			graphqlOperation(onDeleteSub)
+		).subscribe({
+			next: (data) => {
+				const deletedSection = data.value.data[key];
+				console.log(data.value.data[key]);
+				if (deletedSection.userId !== userId) {
+					console.log(" Deleted Data is for another user!");
+					return;
+				}
+				fetchAllData();
+			},
+		});
+		return () => subscription.unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		const key = onUpdateSub.split(" ")[3].replace("O", "o");
+		const subscription = API.graphql(
+			graphqlOperation(onUpdateSub)
+		).subscribe({
+			next: (data) => {
+				const updatedData = data.value.data[key];
+				if (updatedData.userId !== userId) {
+					console.log(" Updated Data is for another user!");
+					return;
+				}
+				fetchAllData();
+			},
+		});
+		return () => subscription.unsubscribe();
+	}, []);
+
+	useEffect(() => {
+		fetchAllData();
+	}, []);
 
 	const onEdit = async (id: string) => {
-		const data = await getData(id);
+		const data = await getData(id, fetchSingleDataOp);
 		setEditingData(data.data);
 		setEditing(true);
 		setModal(true);
@@ -80,7 +143,7 @@ const ScreenList = ({
 	}, [modalVisible]);
 
 	return (
-		<View style={modalStyles.container}>
+		<View style={styles.container}>
 			<FlatList
 				data={value}
 				scrollEnabled={true}
@@ -109,7 +172,7 @@ const ScreenList = ({
 				ListFooterComponent={() =>
 					value.length > 0 ? <Seperator /> : <View />
 				}
-				style={modalStyles.list}
+				style={styles.list}
 			/>
 			<Modal
 				animationType='fade'
@@ -129,16 +192,18 @@ const ScreenList = ({
 
 const testFunc = () => {};
 
-export const modalStyles = StyleSheet.create({
+const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: "#EBEBEB",
 	},
 	list: {
-		width: "100%",
-		height: "100%",
+		flex: 1,
 		paddingVertical: 1,
 	},
+});
+
+export const modalStyles = StyleSheet.create({
 	centeredView: {
 		flex: 1,
 		justifyContent: "center",

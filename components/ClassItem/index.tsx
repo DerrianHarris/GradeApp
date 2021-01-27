@@ -1,7 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { getClass, getSection } from "../../graphql/queries";
 import { Class } from "../../types";
+import { CalClassGrade, CalcSectionGrade, getData } from "../../Utils";
 import TouchableButtonComponent from "../TouchableButtonComponent";
 
 export type ClassItemProps = {
@@ -14,12 +16,24 @@ export type ClassItemProps = {
 const ClassItem = (props: ClassItemProps) => {
 	const navigation = useNavigation();
 	const { data, onDelete, onSwipe, onEdit } = props;
+	const userId = data.userId;
+	const classId = data.id;
+
+	const [grade, setGrade] = useState(0);
+
+	useEffect(() => {
+		const getDataFunc = async () => {
+			setGrade(await CalClassGrade(classId));
+		};
+		getDataFunc();
+	});
+
 	return (
 		<TouchableButtonComponent
 			onPress={() => {
 				navigation.navigate("Sections", {
-					classId: data.id,
-					userId: data.userId,
+					classId,
+					userId,
 				});
 			}}
 			onDelete={onDelete}
@@ -52,17 +66,13 @@ const ClassItem = (props: ClassItemProps) => {
 								fontSize: 32,
 								fontWeight: "500",
 							}}>
-							{calcGrade().toString() + "%"}
+							{grade.toPrecision(3) + "%"}
 						</Text>
 					</View>
 				</View>
 			}
 		/>
 	);
-};
-
-const calcGrade = () => {
-	return 100;
 };
 
 const styles = StyleSheet.create({
